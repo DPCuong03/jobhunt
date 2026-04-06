@@ -1,0 +1,551 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model admins {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name       String    @db.VarChar(255)
+  email      String    @db.VarChar(255)
+  password   String    @db.VarChar(255)
+  photo      String    @db.VarChar(255)
+  token      String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model advertisements {
+  id                        BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  job_listing_ad            String    @db.VarChar(255)
+  job_listing_ad_url        String?   @db.VarChar(255)
+  job_listing_ad_status     String    @db.VarChar(255)
+  company_listing_ad        String    @db.VarChar(255)
+  company_listing_ad_url    String?   @db.VarChar(255)
+  company_listing_ad_status String    @db.VarChar(255)
+  created_at                DateTime? @db.Timestamp(0)
+  updated_at                DateTime? @db.Timestamp(0)
+}
+
+model banners {
+  id                     BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  banner_job_listing     String    @db.Text
+  banner_job_detail      String    @db.Text
+  banner_job_categories  String    @db.Text
+  banner_company_listing String    @db.Text
+  banner_company_detail  String    @db.Text
+  banner_pricing         String    @db.Text
+  banner_blog            String    @db.Text
+  banner_post            String    @db.Text
+  banner_faq             String    @db.Text
+  banner_contact         String    @db.Text
+  banner_terms           String    @db.Text
+  banner_privacy         String    @db.Text
+  banner_signup          String    @db.Text
+  banner_login           String    @db.Text
+  banner_forget_password String    @db.Text
+  banner_company_panel   String    @db.Text
+  banner_candidate_panel String    @db.Text
+  created_at             DateTime? @db.Timestamp(0)
+  updated_at             DateTime? @db.Timestamp(0)
+}
+
+model candidate_applications {
+  id           BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  candidate_id Int
+  job_id       Int
+  cover_letter String    @db.Text
+  status       String    @db.Text
+  created_at   DateTime? @db.Timestamp(0)
+  updated_at   DateTime? @db.Timestamp(0)
+}
+
+model candidate_awards {
+  id           BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  candidate_id Int
+  title        String    @db.Text
+  description  String    @db.Text
+  date         String    @db.Text
+  created_at   DateTime? @db.Timestamp(0)
+  updated_at   DateTime? @db.Timestamp(0)
+}
+
+model candidate_bookmarks {
+  id           BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  candidate_id Int
+  job_id       Int
+  created_at   DateTime? @db.Timestamp(0)
+  updated_at   DateTime? @db.Timestamp(0)
+}
+
+model candidate_education {
+  id           BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  candidate_id Int
+  level        String    @db.Text
+  institute    String    @db.Text
+  degree       String    @db.Text
+  passing_year String    @db.Text
+  created_at   DateTime? @db.Timestamp(0)
+  updated_at   DateTime? @db.Timestamp(0)
+}
+
+model candidate_experiences {
+  id           BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  candidate_id Int
+  company      String    @db.Text
+  designation  String    @db.Text
+  start_date   String    @db.Text
+  end_date     String    @db.Text
+  created_at   DateTime? @db.Timestamp(0)
+  updated_at   DateTime? @db.Timestamp(0)
+}
+
+model candidate_resumes {
+  id           BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  candidate_id Int
+  name         String    @db.Text
+  file         String    @db.Text
+  created_at   DateTime? @db.Timestamp(0)
+  updated_at   DateTime? @db.Timestamp(0)
+}
+
+model candidate_skills {
+  id           BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  candidate_id Int
+  name         String    @db.Text
+  percentage   String    @db.Text
+  created_at   DateTime? @db.Timestamp(0)
+  updated_at   DateTime? @db.Timestamp(0)
+}
+
+model candidates {
+  id             BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name           String    @db.VarChar(255)
+  designation    String?   @db.VarChar(255)
+  username       String    @db.VarChar(255)
+  email          String    @db.VarChar(255)
+  password       String    @db.VarChar(255)
+  token          String?   @db.VarChar(255)
+  photo          String?   @db.VarChar(255)
+  biography      String?   @db.Text
+  phone          String?   @db.VarChar(255)
+  country        String?   @db.VarChar(255)
+  address        String?   @db.VarChar(255)
+  state          String?   @db.VarChar(255)
+  city           String?   @db.VarChar(255)
+  zip_code       String?   @db.VarChar(255)
+  gender         String?   @db.VarChar(255)
+  marital_status String?   @db.VarChar(255)
+  date_of_birth  String?   @db.VarChar(255)
+  website        String?   @db.VarChar(255)
+  status         Int       @db.TinyInt
+  created_at     DateTime? @db.Timestamp(0)
+  updated_at     DateTime? @db.Timestamp(0)
+}
+
+model companies {
+  id                  BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  company_name        String    @db.VarChar(255)
+  person_name         String    @db.VarChar(255)
+  username            String    @db.VarChar(255)
+  email               String    @db.VarChar(255)
+  password            String    @db.VarChar(255)
+  token               String?   @db.VarChar(255)
+  logo                String?   @db.VarChar(255)
+  phone               String?   @db.VarChar(255)
+  address             String?   @db.VarChar(255)
+  company_location_id Int?
+  company_size_id     Int?
+  founded_on          String?   @db.VarChar(255)
+  website             String?   @db.VarChar(255)
+  description         String?   @db.Text
+  oh_mon              String?   @db.VarChar(255)
+  oh_tue              String?   @db.VarChar(255)
+  oh_wed              String?   @db.VarChar(255)
+  oh_thu              String?   @db.VarChar(255)
+  oh_fri              String?   @db.VarChar(255)
+  oh_sat              String?   @db.VarChar(255)
+  oh_sun              String?   @db.VarChar(255)
+  map_code            String?   @db.Text
+  facebook            String?   @db.Text
+  twitter             String?   @db.Text
+  linkedin            String?   @db.Text
+  instagram           String?   @db.Text
+  status              Int       @db.TinyInt
+  company_industry_id Int?
+  created_at          DateTime? @db.Timestamp(0)
+  updated_at          DateTime? @db.Timestamp(0)
+}
+
+model company_industries {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name       String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model company_locations {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name       String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model company_photos {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  company_id Int
+  photo      String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model company_sizes {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name       String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model company_videos {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  company_id Int
+  video_id   String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model failed_jobs {
+  id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  uuid       String   @unique(map: "failed_jobs_uuid_unique") @db.VarChar(255)
+  connection String   @db.Text
+  queue      String   @db.Text
+  payload    String   @db.LongText
+  exception  String   @db.LongText
+  failed_at  DateTime @default(now()) @db.Timestamp(0)
+}
+
+model faqs {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  question   String    @db.Text
+  answer     String    @db.Text
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model job_categories {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name       String    @db.Text
+  icon       String    @db.Text
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model job_experiences {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name       String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model job_genders {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name       String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model job_locations {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name       String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model job_salary_ranges {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name       String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model job_types {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name       String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model jobs {
+  id                  BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  company_id          Int
+  title               String    @db.Text
+  description         String    @db.Text
+  responsibility      String?   @db.Text
+  skill               String?   @db.Text
+  education           String?   @db.Text
+  benefit             String?   @db.Text
+  deadline            String    @db.Text
+  vacancy             Int
+  job_category_id     Int
+  job_location_id     Int
+  job_type_id         Int
+  job_experience_id   Int
+  job_gender_id       Int
+  job_salary_range_id Int
+  map_code            String?   @db.Text
+  is_featured         Int       @db.TinyInt
+  is_urgent           Int       @db.TinyInt
+  created_at          DateTime? @db.Timestamp(0)
+  updated_at          DateTime? @db.Timestamp(0)
+}
+
+model migrations {
+  id        Int    @id @default(autoincrement()) @db.UnsignedInt
+  migration String @db.VarChar(255)
+  batch     Int
+}
+
+model orders {
+  id               BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  company_id       Int
+  package_id       Int
+  order_no         String    @db.VarChar(255)
+  paid_amount      String    @db.VarChar(255)
+  payment_method   String    @db.VarChar(255)
+  start_date       String    @db.VarChar(255)
+  expire_date      String    @db.VarChar(255)
+  currently_active Int       @db.TinyInt
+  created_at       DateTime? @db.Timestamp(0)
+  updated_at       DateTime? @db.Timestamp(0)
+}
+
+model packages {
+  id                          BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  package_name                String    @db.VarChar(200)
+  package_price               Int       @db.SmallInt
+  package_days                Int       @db.SmallInt
+  package_display_time        String    @db.VarChar(100)
+  total_allowed_jobs          Int       @db.TinyInt
+  total_allowed_featured_jobs Int       @db.TinyInt
+  total_allowed_photos        Int       @db.TinyInt
+  total_allowed_videos        Int       @db.TinyInt
+  created_at                  DateTime? @db.Timestamp(0)
+  updated_at                  DateTime? @db.Timestamp(0)
+}
+
+model page_blog_items {
+  id               BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  heading          String    @db.Text
+  title            String?   @db.Text
+  meta_description String?   @db.Text
+  created_at       DateTime? @db.Timestamp(0)
+  updated_at       DateTime? @db.Timestamp(0)
+}
+
+model page_contact_items {
+  id               BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  heading          String    @db.Text
+  map_code         String    @db.Text
+  title            String?   @db.Text
+  meta_description String?   @db.Text
+  created_at       DateTime? @db.Timestamp(0)
+  updated_at       DateTime? @db.Timestamp(0)
+}
+
+model page_faq_items {
+  id               BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  heading          String    @db.Text
+  title            String?   @db.Text
+  meta_description String?   @db.Text
+  created_at       DateTime? @db.Timestamp(0)
+  updated_at       DateTime? @db.Timestamp(0)
+}
+
+model page_home_items {
+  id                       BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  heading                  String    @db.Text
+  text                     String?   @db.Text
+  job_title                String    @db.Text
+  job_category             String    @db.Text
+  job_location             String    @db.Text
+  search                   String    @db.Text
+  background               String    @db.Text
+  job_category_heading     String    @db.Text
+  job_category_subheading  String?   @db.Text
+  job_category_status      String    @db.Text
+  why_choose_heading       String    @db.Text
+  why_choose_subheading    String?   @db.Text
+  why_choose_background    String    @db.Text
+  why_choose_status        String    @db.Text
+  featured_jobs_heading    String    @db.Text
+  featured_jobs_subheading String?   @db.Text
+  featured_jobs_status     String    @db.Text
+  testimonial_heading      String    @db.Text
+  testimonial_background   String    @db.Text
+  testimonial_status       String    @db.Text
+  blog_heading             String    @db.Text
+  blog_subheading          String?   @db.Text
+  blog_status              String    @db.Text
+  title                    String?   @db.Text
+  meta_description         String?   @db.Text
+  created_at               DateTime? @db.Timestamp(0)
+  updated_at               DateTime? @db.Timestamp(0)
+}
+
+model page_job_category_items {
+  id               BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  heading          String    @db.Text
+  title            String?   @db.Text
+  meta_description String?   @db.Text
+  created_at       DateTime? @db.Timestamp(0)
+  updated_at       DateTime? @db.Timestamp(0)
+}
+
+model page_other_items {
+  id                                    BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  login_page_heading                    String    @db.Text
+  login_page_title                      String?   @db.Text
+  login_page_meta_description           String?   @db.Text
+  signup_page_heading                   String    @db.Text
+  signup_page_title                     String?   @db.Text
+  signup_page_meta_description          String?   @db.Text
+  forget_password_page_heading          String    @db.Text
+  forget_password_page_title            String?   @db.Text
+  forget_password_page_meta_description String?   @db.Text
+  job_listing_page_heading              String    @db.Text
+  job_listing_page_title                String?   @db.Text
+  job_listing_page_meta_description     String?   @db.Text
+  company_listing_page_heading          String    @db.Text
+  company_listing_page_title            String?   @db.Text
+  company_listing_page_meta_description String?   @db.Text
+  created_at                            DateTime? @db.Timestamp(0)
+  updated_at                            DateTime? @db.Timestamp(0)
+}
+
+model page_pricing_items {
+  id               BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  heading          String    @db.Text
+  title            String?   @db.Text
+  meta_description String?   @db.Text
+  created_at       DateTime? @db.Timestamp(0)
+  updated_at       DateTime? @db.Timestamp(0)
+}
+
+model page_privacy_items {
+  id               BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  heading          String    @db.Text
+  content          String    @db.Text
+  title            String?   @db.Text
+  meta_description String?   @db.Text
+  created_at       DateTime? @db.Timestamp(0)
+  updated_at       DateTime? @db.Timestamp(0)
+}
+
+model page_term_items {
+  id               BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  heading          String    @db.Text
+  content          String    @db.Text
+  title            String?   @db.Text
+  meta_description String?   @db.Text
+  created_at       DateTime? @db.Timestamp(0)
+  updated_at       DateTime? @db.Timestamp(0)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model password_resets {
+  email      String    @db.VarChar(255)
+  token      String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+
+  @@index([email], map: "password_resets_email_index")
+  @@ignore
+}
+
+model personal_access_tokens {
+  id             BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  tokenable_type String    @db.VarChar(255)
+  tokenable_id   BigInt    @db.UnsignedBigInt
+  name           String    @db.VarChar(255)
+  token          String    @unique(map: "personal_access_tokens_token_unique") @db.VarChar(64)
+  abilities      String?   @db.Text
+  last_used_at   DateTime? @db.Timestamp(0)
+  created_at     DateTime? @db.Timestamp(0)
+  updated_at     DateTime? @db.Timestamp(0)
+
+  @@index([tokenable_type, tokenable_id], map: "personal_access_tokens_tokenable_type_tokenable_id_index")
+}
+
+model posts {
+  id                BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  heading           String    @db.Text
+  slug              String    @db.Text
+  short_description String    @db.Text
+  description       String    @db.Text
+  total_view        String    @db.Text
+  photo             String    @db.Text
+  title             String?   @db.Text
+  meta_description  String?   @db.Text
+  created_at        DateTime? @db.Timestamp(0)
+  updated_at        DateTime? @db.Timestamp(0)
+}
+
+model settings {
+  id             BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  logo           String    @db.Text
+  favicon        String    @db.Text
+  top_bar_phone  String?   @db.Text
+  top_bar_email  String?   @db.Text
+  footer_phone   String?   @db.Text
+  footer_email   String?   @db.Text
+  footer_address String?   @db.Text
+  facebook       String?   @db.Text
+  twitter        String?   @db.Text
+  pinterest      String?   @db.Text
+  linkedin       String?   @db.Text
+  instagram      String?   @db.Text
+  copyright_text String    @db.Text
+  created_at     DateTime? @db.Timestamp(0)
+  updated_at     DateTime? @db.Timestamp(0)
+}
+
+model subscribers {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  email      String    @db.Text
+  token      String    @db.Text
+  status     Int       @db.TinyInt
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
+
+model testimonials {
+  id          BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name        String    @db.Text
+  designation String    @db.Text
+  comment     String    @db.Text
+  photo       String    @db.Text
+  created_at  DateTime? @db.Timestamp(0)
+  updated_at  DateTime? @db.Timestamp(0)
+}
+
+model users {
+  id                BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name              String    @db.VarChar(255)
+  email             String    @unique(map: "users_email_unique") @db.VarChar(255)
+  email_verified_at DateTime? @db.Timestamp(0)
+  password          String    @db.VarChar(255)
+  remember_token    String?   @db.VarChar(100)
+  created_at        DateTime? @db.Timestamp(0)
+  updated_at        DateTime? @db.Timestamp(0)
+}
+
+model why_choose_items {
+  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  icon       String    @db.Text
+  heading    String    @db.Text
+  text       String    @db.Text
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime? @db.Timestamp(0)
+}
