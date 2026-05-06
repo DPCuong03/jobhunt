@@ -54,167 +54,219 @@ model banners {
 }
 
 model candidate_applications {
-  id           BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  candidate_id Int
-  job_id       Int
-  cover_letter String    @db.Text
-  status       String    @db.Text
-  created_at   DateTime? @db.Timestamp(0)
-  updated_at   DateTime? @db.Timestamp(0)
+  id           BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  candidate_id BigInt     @db.UnsignedBigInt
+  job_id       BigInt     @db.UnsignedBigInt
+  cover_letter String     @db.Text
+  status       String     @db.Text
+  created_at   DateTime?  @db.Timestamp(0)
+  updated_at   DateTime?  @db.Timestamp(0)
+  candidates   candidates @relation(fields: [candidate_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "candidate_applications_candidate_id_foreign")
+  jobs         jobs       @relation(fields: [job_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "candidate_applications_job_id_foreign")
+
+  @@index([candidate_id], map: "candidate_applications_candidate_id_foreign")
+  @@index([job_id], map: "candidate_applications_job_id_foreign")
 }
 
 model candidate_awards {
-  id           BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  candidate_id Int
-  title        String    @db.Text
-  description  String    @db.Text
-  date         String    @db.Text
-  created_at   DateTime? @db.Timestamp(0)
-  updated_at   DateTime? @db.Timestamp(0)
+  id           BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  candidate_id BigInt     @db.UnsignedBigInt
+  title        String     @db.Text
+  description  String     @db.Text
+  date         String     @db.Text
+  created_at   DateTime?  @db.Timestamp(0)
+  updated_at   DateTime?  @db.Timestamp(0)
+  candidates   candidates @relation(fields: [candidate_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "candidate_awards_candidate_id_foreign")
+
+  @@index([candidate_id], map: "candidate_awards_candidate_id_foreign")
 }
 
 model candidate_bookmarks {
-  id           BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  candidate_id Int
-  job_id       Int
-  created_at   DateTime? @db.Timestamp(0)
-  updated_at   DateTime? @db.Timestamp(0)
+  id           BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  candidate_id BigInt     @db.UnsignedBigInt
+  job_id       BigInt     @db.UnsignedBigInt
+  created_at   DateTime?  @db.Timestamp(0)
+  updated_at   DateTime?  @db.Timestamp(0)
+  candidates   candidates @relation(fields: [candidate_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "candidate_bookmarks_candidate_id_foreign")
+  jobs         jobs       @relation(fields: [job_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "candidate_bookmarks_job_id_foreign")
+
+  @@index([candidate_id], map: "candidate_bookmarks_candidate_id_foreign")
+  @@index([job_id], map: "candidate_bookmarks_job_id_foreign")
 }
 
 model candidate_education {
-  id           BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  candidate_id Int
-  level        String    @db.Text
-  institute    String    @db.Text
-  degree       String    @db.Text
-  passing_year String    @db.Text
-  created_at   DateTime? @db.Timestamp(0)
-  updated_at   DateTime? @db.Timestamp(0)
+  id           BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  candidate_id BigInt     @db.UnsignedBigInt
+  level        String     @db.Text
+  institute    String     @db.Text
+  degree       String     @db.Text
+  passing_year String     @db.Text
+  created_at   DateTime?  @db.Timestamp(0)
+  updated_at   DateTime?  @db.Timestamp(0)
+  candidates   candidates @relation(fields: [candidate_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "candidate_education_candidate_id_foreign")
+
+  @@index([candidate_id], map: "candidate_education_candidate_id_foreign")
 }
 
 model candidate_experiences {
-  id           BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  candidate_id Int
-  company      String    @db.Text
-  designation  String    @db.Text
-  start_date   String    @db.Text
-  end_date     String    @db.Text
-  created_at   DateTime? @db.Timestamp(0)
-  updated_at   DateTime? @db.Timestamp(0)
+  id           BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  candidate_id BigInt     @db.UnsignedBigInt
+  company      String     @db.Text
+  designation  String     @db.Text
+  start_date   String     @db.Text
+  end_date     String     @db.Text
+  created_at   DateTime?  @db.Timestamp(0)
+  updated_at   DateTime?  @db.Timestamp(0)
+  candidates   candidates @relation(fields: [candidate_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "candidate_experiences_candidate_id_foreign")
+
+  @@index([candidate_id], map: "candidate_experiences_candidate_id_foreign")
 }
 
 model candidate_resumes {
-  id           BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  candidate_id Int
-  name         String    @db.Text
-  file         String    @db.Text
-  created_at   DateTime? @db.Timestamp(0)
-  updated_at   DateTime? @db.Timestamp(0)
+  id           BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  candidate_id BigInt     @db.UnsignedBigInt
+  name         String     @db.Text
+  file         String     @db.Text
+  created_at   DateTime?  @db.Timestamp(0)
+  updated_at   DateTime?  @db.Timestamp(0)
+  candidates   candidates @relation(fields: [candidate_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "candidate_resumes_candidate_id_foreign")
+
+  @@index([candidate_id], map: "candidate_resumes_candidate_id_foreign")
 }
 
 model candidate_skills {
-  id           BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  candidate_id Int
-  name         String    @db.Text
-  percentage   String    @db.Text
-  created_at   DateTime? @db.Timestamp(0)
-  updated_at   DateTime? @db.Timestamp(0)
+  id           BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  candidate_id BigInt     @db.UnsignedBigInt
+  name         String     @db.Text
+  percentage   String     @db.Text
+  created_at   DateTime?  @db.Timestamp(0)
+  updated_at   DateTime?  @db.Timestamp(0)
+  candidates   candidates @relation(fields: [candidate_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "candidate_skills_candidate_id_foreign")
+
+  @@index([candidate_id], map: "candidate_skills_candidate_id_foreign")
 }
 
 model candidates {
-  id             BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  name           String    @db.VarChar(255)
-  designation    String?   @db.VarChar(255)
-  username       String    @db.VarChar(255)
-  email          String    @db.VarChar(255)
-  password       String    @db.VarChar(255)
-  token          String?   @db.VarChar(255)
-  photo          String?   @db.VarChar(255)
-  biography      String?   @db.Text
-  phone          String?   @db.VarChar(255)
-  country        String?   @db.VarChar(255)
-  address        String?   @db.VarChar(255)
-  state          String?   @db.VarChar(255)
-  city           String?   @db.VarChar(255)
-  zip_code       String?   @db.VarChar(255)
-  gender         String?   @db.VarChar(255)
-  marital_status String?   @db.VarChar(255)
-  date_of_birth  String?   @db.VarChar(255)
-  website        String?   @db.VarChar(255)
-  status         Int       @db.TinyInt
-  created_at     DateTime? @db.Timestamp(0)
-  updated_at     DateTime? @db.Timestamp(0)
+  id                     BigInt                   @id @default(autoincrement()) @db.UnsignedBigInt
+  name                   String                   @db.VarChar(255)
+  designation            String?                  @db.VarChar(255)
+  username               String                   @db.VarChar(255)
+  email                  String                   @db.VarChar(255)
+  password               String                   @db.VarChar(255)
+  token                  String?                  @db.VarChar(255)
+  photo                  String?                  @db.VarChar(255)
+  biography              String?                  @db.Text
+  phone                  String?                  @db.VarChar(255)
+  country                String?                  @db.VarChar(255)
+  address                String?                  @db.VarChar(255)
+  state                  String?                  @db.VarChar(255)
+  city                   String?                  @db.VarChar(255)
+  zip_code               String?                  @db.VarChar(255)
+  gender                 String?                  @db.VarChar(255)
+  marital_status         String?                  @db.VarChar(255)
+  date_of_birth          String?                  @db.VarChar(255)
+  website                String?                  @db.VarChar(255)
+  status                 Int                      @db.TinyInt
+  created_at             DateTime?                @db.Timestamp(0)
+  updated_at             DateTime?                @db.Timestamp(0)
+  candidate_applications candidate_applications[]
+  candidate_awards       candidate_awards[]
+  candidate_bookmarks    candidate_bookmarks[]
+  candidate_education    candidate_education[]
+  candidate_experiences  candidate_experiences[]
+  candidate_resumes      candidate_resumes[]
+  candidate_skills       candidate_skills[]
 }
 
 model companies {
-  id                  BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  company_name        String    @db.VarChar(255)
-  person_name         String    @db.VarChar(255)
-  username            String    @db.VarChar(255)
-  email               String    @db.VarChar(255)
-  password            String    @db.VarChar(255)
-  token               String?   @db.VarChar(255)
-  logo                String?   @db.VarChar(255)
-  phone               String?   @db.VarChar(255)
-  address             String?   @db.VarChar(255)
-  company_location_id Int?
-  company_size_id     Int?
-  founded_on          String?   @db.VarChar(255)
-  website             String?   @db.VarChar(255)
-  description         String?   @db.Text
-  oh_mon              String?   @db.VarChar(255)
-  oh_tue              String?   @db.VarChar(255)
-  oh_wed              String?   @db.VarChar(255)
-  oh_thu              String?   @db.VarChar(255)
-  oh_fri              String?   @db.VarChar(255)
-  oh_sat              String?   @db.VarChar(255)
-  oh_sun              String?   @db.VarChar(255)
-  map_code            String?   @db.Text
-  facebook            String?   @db.Text
-  twitter             String?   @db.Text
-  linkedin            String?   @db.Text
-  instagram           String?   @db.Text
-  status              Int       @db.TinyInt
-  company_industry_id Int?
-  created_at          DateTime? @db.Timestamp(0)
-  updated_at          DateTime? @db.Timestamp(0)
+  id                  BigInt              @id @default(autoincrement()) @db.UnsignedBigInt
+  company_name        String              @db.VarChar(255)
+  person_name         String              @db.VarChar(255)
+  username            String              @db.VarChar(255)
+  email               String              @db.VarChar(255)
+  password            String              @db.VarChar(255)
+  token               String?             @db.VarChar(255)
+  logo                String?             @db.VarChar(255)
+  phone               String?             @db.VarChar(255)
+  address             String?             @db.VarChar(255)
+  company_location_id BigInt?             @db.UnsignedBigInt
+  company_size_id     BigInt?             @db.UnsignedBigInt
+  founded_on          String?             @db.VarChar(255)
+  website             String?             @db.VarChar(255)
+  description         String?             @db.Text
+  oh_mon              String?             @db.VarChar(255)
+  oh_tue              String?             @db.VarChar(255)
+  oh_wed              String?             @db.VarChar(255)
+  oh_thu              String?             @db.VarChar(255)
+  oh_fri              String?             @db.VarChar(255)
+  oh_sat              String?             @db.VarChar(255)
+  oh_sun              String?             @db.VarChar(255)
+  map_code            String?             @db.Text
+  facebook            String?             @db.Text
+  twitter             String?             @db.Text
+  linkedin            String?             @db.Text
+  instagram           String?             @db.Text
+  status              Int                 @db.TinyInt
+  company_industry_id BigInt?             @db.UnsignedBigInt
+  created_at          DateTime?           @db.Timestamp(0)
+  updated_at          DateTime?           @db.Timestamp(0)
+  company_industries  company_industries? @relation(fields: [company_industry_id], references: [id], onUpdate: NoAction, map: "companies_company_industry_id_foreign")
+  company_locations   company_locations?  @relation(fields: [company_location_id], references: [id], onUpdate: NoAction, map: "companies_company_location_id_foreign")
+  company_sizes       company_sizes?      @relation(fields: [company_size_id], references: [id], onUpdate: NoAction, map: "companies_company_size_id_foreign")
+  company_photos      company_photos[]
+  company_videos      company_videos[]
+  jobs                jobs[]
+  orders              orders[]
+
+  @@index([company_industry_id], map: "companies_company_industry_id_foreign")
+  @@index([company_location_id], map: "companies_company_location_id_foreign")
+  @@index([company_size_id], map: "companies_company_size_id_foreign")
 }
 
 model company_industries {
-  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  name       String    @db.VarChar(255)
-  created_at DateTime? @db.Timestamp(0)
-  updated_at DateTime? @db.Timestamp(0)
+  id         BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  name       String      @db.VarChar(255)
+  created_at DateTime?   @db.Timestamp(0)
+  updated_at DateTime?   @db.Timestamp(0)
+  companies  companies[]
 }
 
 model company_locations {
-  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  name       String    @db.VarChar(255)
-  created_at DateTime? @db.Timestamp(0)
-  updated_at DateTime? @db.Timestamp(0)
+  id         BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  name       String      @db.VarChar(255)
+  created_at DateTime?   @db.Timestamp(0)
+  updated_at DateTime?   @db.Timestamp(0)
+  companies  companies[]
 }
 
 model company_photos {
   id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  company_id Int
+  company_id BigInt    @db.UnsignedBigInt
   photo      String    @db.VarChar(255)
   created_at DateTime? @db.Timestamp(0)
   updated_at DateTime? @db.Timestamp(0)
+  companies  companies @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "company_photos_company_id_foreign")
+
+  @@index([company_id], map: "company_photos_company_id_foreign")
 }
 
 model company_sizes {
-  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  name       String    @db.VarChar(255)
-  created_at DateTime? @db.Timestamp(0)
-  updated_at DateTime? @db.Timestamp(0)
+  id         BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  name       String      @db.VarChar(255)
+  created_at DateTime?   @db.Timestamp(0)
+  updated_at DateTime?   @db.Timestamp(0)
+  companies  companies[]
 }
 
 model company_videos {
   id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  company_id Int
+  company_id BigInt    @db.UnsignedBigInt
   video_id   String    @db.VarChar(255)
   created_at DateTime? @db.Timestamp(0)
   updated_at DateTime? @db.Timestamp(0)
+  companies  companies @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "company_videos_company_id_foreign")
+
+  @@index([company_id], map: "company_videos_company_id_foreign")
 }
 
 model failed_jobs {
@@ -241,6 +293,7 @@ model job_categories {
   icon       String    @db.Text
   created_at DateTime? @db.Timestamp(0)
   updated_at DateTime? @db.Timestamp(0)
+  jobs       jobs[]
 }
 
 model job_experiences {
@@ -248,6 +301,7 @@ model job_experiences {
   name       String    @db.VarChar(255)
   created_at DateTime? @db.Timestamp(0)
   updated_at DateTime? @db.Timestamp(0)
+  jobs       jobs[]
 }
 
 model job_genders {
@@ -255,6 +309,7 @@ model job_genders {
   name       String    @db.VarChar(255)
   created_at DateTime? @db.Timestamp(0)
   updated_at DateTime? @db.Timestamp(0)
+  jobs       jobs[]
 }
 
 model job_locations {
@@ -262,6 +317,7 @@ model job_locations {
   name       String    @db.VarChar(255)
   created_at DateTime? @db.Timestamp(0)
   updated_at DateTime? @db.Timestamp(0)
+  jobs       jobs[]
 }
 
 model job_salary_ranges {
@@ -269,6 +325,7 @@ model job_salary_ranges {
   name       String    @db.VarChar(255)
   created_at DateTime? @db.Timestamp(0)
   updated_at DateTime? @db.Timestamp(0)
+  jobs       jobs[]
 }
 
 model job_types {
@@ -276,30 +333,48 @@ model job_types {
   name       String    @db.VarChar(255)
   created_at DateTime? @db.Timestamp(0)
   updated_at DateTime? @db.Timestamp(0)
+  jobs       jobs[]
 }
 
 model jobs {
-  id                  BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  company_id          Int
-  title               String    @db.Text
-  description         String    @db.Text
-  responsibility      String?   @db.Text
-  skill               String?   @db.Text
-  education           String?   @db.Text
-  benefit             String?   @db.Text
-  deadline            String    @db.Text
-  vacancy             Int
-  job_category_id     Int
-  job_location_id     Int
-  job_type_id         Int
-  job_experience_id   Int
-  job_gender_id       Int
-  job_salary_range_id Int
-  map_code            String?   @db.Text
-  is_featured         Int       @db.TinyInt
-  is_urgent           Int       @db.TinyInt
-  created_at          DateTime? @db.Timestamp(0)
-  updated_at          DateTime? @db.Timestamp(0)
+  id                     BigInt                   @id @default(autoincrement()) @db.UnsignedBigInt
+  company_id             BigInt                   @db.UnsignedBigInt
+  title                  String                   @db.Text
+  description            String                   @db.Text
+  responsibility         String?                  @db.Text
+  skill                  String?                  @db.Text
+  education              String?                  @db.Text
+  benefit                String?                  @db.Text
+  deadline               String                   @db.Text
+  vacancy                Int
+  job_category_id        BigInt                   @db.UnsignedBigInt
+  job_location_id        BigInt                   @db.UnsignedBigInt
+  job_type_id            BigInt                   @db.UnsignedBigInt
+  job_experience_id      BigInt                   @db.UnsignedBigInt
+  job_gender_id          BigInt                   @db.UnsignedBigInt
+  job_salary_range_id    BigInt                   @db.UnsignedBigInt
+  map_code               String?                  @db.Text
+  is_featured            Int                      @db.TinyInt
+  is_urgent              Int                      @db.TinyInt
+  created_at             DateTime?                @db.Timestamp(0)
+  updated_at             DateTime?                @db.Timestamp(0)
+  candidate_applications candidate_applications[]
+  candidate_bookmarks    candidate_bookmarks[]
+  companies              companies                @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "jobs_company_id_foreign")
+  job_categories         job_categories           @relation(fields: [job_category_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "jobs_job_category_id_foreign")
+  job_experiences        job_experiences          @relation(fields: [job_experience_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "jobs_job_experience_id_foreign")
+  job_genders            job_genders              @relation(fields: [job_gender_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "jobs_job_gender_id_foreign")
+  job_locations          job_locations            @relation(fields: [job_location_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "jobs_job_location_id_foreign")
+  job_salary_ranges      job_salary_ranges        @relation(fields: [job_salary_range_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "jobs_job_salary_range_id_foreign")
+  job_types              job_types                @relation(fields: [job_type_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "jobs_job_type_id_foreign")
+
+  @@index([company_id], map: "jobs_company_id_foreign")
+  @@index([job_category_id], map: "jobs_job_category_id_foreign")
+  @@index([job_experience_id], map: "jobs_job_experience_id_foreign")
+  @@index([job_gender_id], map: "jobs_job_gender_id_foreign")
+  @@index([job_location_id], map: "jobs_job_location_id_foreign")
+  @@index([job_salary_range_id], map: "jobs_job_salary_range_id_foreign")
+  @@index([job_type_id], map: "jobs_job_type_id_foreign")
 }
 
 model migrations {
@@ -310,8 +385,8 @@ model migrations {
 
 model orders {
   id               BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  company_id       Int
-  package_id       Int
+  company_id       BigInt    @db.UnsignedBigInt
+  package_id       BigInt    @db.UnsignedBigInt
   order_no         String    @db.VarChar(255)
   paid_amount      String    @db.VarChar(255)
   payment_method   String    @db.VarChar(255)
@@ -320,6 +395,11 @@ model orders {
   currently_active Int       @db.TinyInt
   created_at       DateTime? @db.Timestamp(0)
   updated_at       DateTime? @db.Timestamp(0)
+  companies        companies @relation(fields: [company_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "orders_company_id_foreign")
+  packages         packages  @relation(fields: [package_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "orders_package_id_foreign")
+
+  @@index([company_id], map: "orders_company_id_foreign")
+  @@index([package_id], map: "orders_package_id_foreign")
 }
 
 model packages {
@@ -334,6 +414,7 @@ model packages {
   total_allowed_videos        Int       @db.TinyInt
   created_at                  DateTime? @db.Timestamp(0)
   updated_at                  DateTime? @db.Timestamp(0)
+  orders                      orders[]
 }
 
 model page_blog_items {

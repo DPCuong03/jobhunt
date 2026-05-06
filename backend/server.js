@@ -1,45 +1,61 @@
-const express = require("express");
-const { PrismaClient } = require("@prisma/client");
-const cors = require("cors");
-require("dotenv").config();
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import prisma from "./lib/db.js";
+import cookieParser from "cookie-parser";
+
+import jobRoutes from "./routes/job.route.js";
+import authRoutes from "./routes/auth.route.js";
+
+import frontRoutes from "./routes/front.route.js";
+import companyRoutes from "./routes/company.route.js";
+import candidateRoutes from "./routes/candidate.route.js";
+import adminRoutes from "./routes/admin.route.js";
+
+import { handleStripeWebhook } from "./controllers/webhook.controller.js";
 
 const app = express();
-const prisma = new PrismaClient();
+dotenv.config();
 
-app.use(cors());
+app.post(
+  "/api/webhook",
+  express.raw({ type: "application/json" }),
+  handleStripeWebhook,
+);
+
+app.use(
+  cors({
+    // 1. Phải chỉ định chính xác Origin của Frontend, không dùng '*'
+    origin: "http://localhost:3000",
+
+    // 2. Bắt buộc để trình duyệt cho phép gửi/nhận Cookie
+    credentials: true,
+
+    // 3. Các phương thức bạn sử dụng
+    methods: ["GET", "POST", "PUT", "DELETE"],
+
+    // 4. Các header cho phép
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 app.use(express.json());
+app.use(cookieParser());
 
-const serialize = (data) => {
-  return JSON.parse(
-    JSON.stringify(data, (key, value) =>
-      typeof value === "bigint" ? value.toString() : value,
-    ),
-  );
+BigInt.prototype.toJSON = function () {
+  if (typeof this === "bigint") {
+    return this.toString();
+  }
+  return String(this);
 };
 
-// Updated Route: Get all candidates
-app.get("/api/candidates", async (req, res) => {
-  try {
-    const candidates = await prisma.candidates.findMany();
+app.use("/api/company", companyRoutes);
+app.use("/api/candidate", candidateRoutes);
+app.use("/api/admin", adminRoutes);
 
-    // Wrap the result in the serialize helper before sending
-    res.json(serialize(candidates));
-  } catch (error) {
-    console.error("Prisma Error:", error);
-    res.status(500).json({ error: "Could not fetch candidates" });
-  }
-});
+app.use("/api/auth", authRoutes);
+app.use("/api/job", jobRoutes);
 
-app.get("/api/jobs", async (req, res) => {
-  try {
-    const jobs = await prisma.jobs.findMany();
-
-    res.json(serialize(jobs));
-  } catch (error) {
-    console.error("Prisma Error:", error);
-    res.status(500).json({ error: "Could not fetch jobs" });
-  }
-});
+app.use("/api", frontRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
