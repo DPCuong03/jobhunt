@@ -10,7 +10,6 @@ const serializeFaq = (faq) => ({
   updatedAt: faq.updated_at?.toISOString() ?? null,
 });
 
-// ─── GET /api/admin/faqs ──────────────────────────────────────────────────────
 // Returns all FAQs ordered by created_at asc
 export const getAllFaqs = async (req, res) => {
   try {
@@ -28,7 +27,6 @@ export const getAllFaqs = async (req, res) => {
   }
 };
 
-// ─── GET /api/admin/faqs/:id ──────────────────────────────────────────────────
 export const getFaqById = async (req, res) => {
   try {
     const id = BigInt(req.params.id);
@@ -49,7 +47,6 @@ export const getFaqById = async (req, res) => {
   }
 };
 
-// ─── POST /api/admin/faqs ─────────────────────────────────────────────────────
 export const createFaq = async (req, res) => {
   try {
     const { question, answer } = req.body;
@@ -77,7 +74,6 @@ export const createFaq = async (req, res) => {
   }
 };
 
-// ─── PUT /api/admin/faqs/:id ──────────────────────────────────────────────────
 export const updateFaq = async (req, res) => {
   try {
     const id = BigInt(req.params.id);
@@ -115,7 +111,6 @@ export const updateFaq = async (req, res) => {
   }
 };
 
-// ─── DELETE /api/admin/faqs/:id ───────────────────────────────────────────────
 export const deleteFaq = async (req, res) => {
   try {
     const id = BigInt(req.params.id);
