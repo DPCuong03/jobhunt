@@ -4,9 +4,9 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const priceToIdMap = {
-  price_1TPJ56KO25beYc75UxRIjdOM: 1, // Thay bằng Price ID thực tế cho gói Basic
-  price_1TPJ6GKO25beYc757j6udMEA: 2, // Thay bằng Price ID thực tế cho gói Standard
-  price_1TPJaMKO25beYc75lZZtdMiF: 3, // Thay bằng Price ID thực tế cho gói Gold
+  price_1TPJ56KO25beYc75UxRIjdOM: 1, // Basic
+  price_1TPJ6GKO25beYc757j6udMEA: 2, // Standard
+  price_1TPJaMKO25beYc75lZZtdMiF: 3, // Gold
 };
 
 export const handleStripeWebhook = async (req, res) => {
@@ -14,7 +14,6 @@ export const handleStripeWebhook = async (req, res) => {
   let event;
 
   try {
-    // Xác thực xem có đúng là Stripe gửi không (dùng whsec_... lấy từ CLI)
     event = stripe.webhooks.constructEvent(
       req.body,
       sig,
@@ -24,11 +23,10 @@ export const handleStripeWebhook = async (req, res) => {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  // Xử lý sự kiện sau khi đã xác thực xong
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
     console.log("Metadata received:", session.metadata);
-    // Lấy thông tin bạn đã đính kèm vào metadata lúc tạo session
+
     const { companyId, packageId: stripePriceId } = session.metadata;
 
     const dbPackageId = priceToIdMap[stripePriceId];
@@ -38,11 +36,9 @@ export const handleStripeWebhook = async (req, res) => {
       return res.status(400).send("Invalid Price ID");
     }
 
-    // 1. Tính toán ngày hết hạn (Expire Date)
     const startDate = new Date();
     const expireDate = new Date();
 
-    // Logic: Gói 1 = 7 ngày, Gói 2 = 30 ngày, Gói 3 = 90 ngày
     const daysToAdd = dbPackageId === 1 ? 7 : dbPackageId === 2 ? 30 : 90;
     expireDate.setDate(startDate.getDate() + daysToAdd);
 
@@ -61,7 +57,7 @@ export const handleStripeWebhook = async (req, res) => {
         await prisma.orders.create({
           data: {
             where: { company_id: parseInt(companyId) },
-            currently_active: 0, // Không kích hoạt ngay vì gói cũ xịn hơn
+            currently_active: 0,
           },
         });
       } else {
@@ -71,7 +67,7 @@ export const handleStripeWebhook = async (req, res) => {
         });
       }
 
-      // 3. Tạo đơn hàng mới vào table orders
+      // Create new order
       await prisma.orders.create({
         data: {
           companies: {
@@ -80,14 +76,14 @@ export const handleStripeWebhook = async (req, res) => {
           packages: {
             connect: { id: dbPackageId },
           },
-          order_no: session.id.slice(-10), // Lấy 10 ký tự cuối làm mã đơn
-          paid_amount: (session.amount_total / 100).toString(), // Stripe trả về amount bằng cents, nên chia 100 để ra dollars
+          order_no: session.id.slice(-10),
+          paid_amount: (session.amount_total / 100).toString(),
           payment_method: "Stripe",
           start_date: startDate.toISOString().split("T")[0],
           expire_date: expireDate.toISOString().split("T")[0],
           created_at: new Date(),
           updated_at: new Date(),
-          currently_active: 1, // Gói mới mua sẽ là gói kích hoạt
+          currently_active: 1,
         },
       });
 

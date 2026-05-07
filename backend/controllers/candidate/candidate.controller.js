@@ -176,16 +176,16 @@ export const getAppliedJobs = async (req, res) => {
     const applications = await prisma.candidate_applications.findMany({
       where: { candidate_id: userId },
       select: {
-        id: true, // SL (Số thứ tự hoặc ID đơn)
-        status: true, // Trạng thái: Applied, Approved, v.v.
-        job_id: true, // ID công việc để liên kết với chi tiết công việc
-        // cover_letter: true, // Lấy nếu bạn muốn nhấn vào nút "Cover Letter" để xem nội dung
+        id: true,
+        status: true,
+        job_id: true,
+
         jobs: {
           select: {
-            title: true, // Job Title
+            title: true,
             companies: {
               select: {
-                company_name: true, // Company Name
+                company_name: true,
               },
             },
           },
@@ -706,7 +706,7 @@ export const updateProfile = async (req, res) => {
       data: {
         name: data.name,
         designation: data.designation,
-        photo: data.photo, // Đây sẽ là 'candidate_photo_123.jpg'
+        photo: data.photo,
         biography: data.biography,
         phone: data.phone,
         country: data.country,
@@ -717,7 +717,7 @@ export const updateProfile = async (req, res) => {
         gender: data.gender,
         marital_status: data.marital_status,
         date_of_birth: data.date_of_birth,
-        website: data.website, // Thêm website nếu có trong schema
+        website: data.website,
       },
     });
 
@@ -730,10 +730,9 @@ export const updateProfile = async (req, res) => {
 
 export const updatePassword = async (req, res) => {
   try {
-    const userId = req.user?.id; // Lấy ID từ middleware verifyToken
+    const userId = req.user?.id;
     const { currentPassword, newPassword } = req.body;
 
-    // 1. Tìm ứng viên trong DB
     const candidate = await prisma.candidates.findUnique({
       where: { id: userId },
     });
@@ -742,16 +741,13 @@ export const updatePassword = async (req, res) => {
       return res.status(404).json({ message: "Candidate not found" });
     }
 
-    // 2. Kiểm tra mật khẩu hiện tại
     const isMatch = await bcrypt.compare(currentPassword, candidate.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Current password is incorrect" });
     }
 
-    // 3. Mã hóa mật khẩu mới
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
-    // 4. Cập nhật vào DB
     await prisma.candidates.update({
       where: { id: userId },
       data: { password: hashedNewPassword },

@@ -8,7 +8,7 @@ const companyRelations = {
     company_photos: true,
     company_sizes: true,
     _count: {
-      select: { jobs: true }, // Để hiển thị "Số lượng vị trí đang tuyển"
+      select: { jobs: true },
     },
     jobs: true,
   },
@@ -69,7 +69,7 @@ export const getAllCompanies = async (req, res) => {
   try {
     const {
       name,
-      industry, // Nên nhận ID từ frontend để chính xác hơn
+      industry,
       location,
       size,
       foundedOn,
@@ -79,14 +79,11 @@ export const getAllCompanies = async (req, res) => {
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
-    // Xây dựng điều kiện lọc
     const where = {
-      // 1. Lọc theo tên công ty (đúng cột company_name)
       ...(name && {
         company_name: { contains: name, mode: "insensitive" },
       }),
 
-      // 2. Lọc theo ID của các bảng quan hệ (theo schema SQL của bạn)
       ...(industry && {
         company_industry_id: parseInt(industry),
       }),
@@ -97,9 +94,6 @@ export const getAllCompanies = async (req, res) => {
         company_size_id: parseInt(size),
       }),
       ...(foundedOn && { founded_on: foundedOn.toString() }),
-
-      // Chỉ lấy các công ty đã kích hoạt (nếu có cột status)
-      // status: 1
     };
 
     const [companies, total] = await Promise.all([
@@ -114,7 +108,7 @@ export const getAllCompanies = async (req, res) => {
     ]);
 
     res.json({
-      data: companies, // Frontend của bạn đang dùng .data nên để key này
+      data: companies,
       pagination: {
         page: parseInt(page),
         total,

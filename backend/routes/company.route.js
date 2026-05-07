@@ -25,10 +25,6 @@ const router = express.Router();
 
 // Public routes
 // Job listing with search/filters
-router.get("/logout", (req, res) => {
-  res.clearCookie("accessToken");
-  res.json({ message: "Logged out successfully" });
-});
 router.get("/dashboard", companyRoute, getDashboard);
 router.get("/profile", companyRoute, getCompanyProfile);
 router.put("/profile/update", companyRoute, updateCompanyProfile);

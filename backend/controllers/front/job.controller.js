@@ -1,4 +1,3 @@
-//JobCategoryController, JobListingController
 import prisma from "../../lib/db.js";
 
 BigInt.prototype.toJSON = function () {
@@ -688,7 +687,6 @@ export const searchJobs = async (req, res) => {
 
 export const getAllJobs = async (req, res) => {
   try {
-    // 1. Lấy thêm các trường mà Frontend gửi lên
     const {
       title,
       category,
@@ -703,11 +701,11 @@ export const getAllJobs = async (req, res) => {
 
     const where = {
       ...(title && { title: { contains: title, mode: "insensitive" } }),
-      // Sử dụng parseInt để ép kiểu về số cho đúng với Database ID
+
       ...(category && { job_category_id: parseInt(category) }),
       ...(location && { job_location_id: parseInt(location) }),
       ...(type && { job_type_id: parseInt(type) }),
-      // Thêm các bộ lọc mới
+
       ...(experience && { job_experience_id: parseInt(experience) }),
       ...(gender && { job_gender_id: parseInt(gender) }),
       ...(salary && { job_salary_range_id: parseInt(salary) }),
@@ -715,13 +713,12 @@ export const getAllJobs = async (req, res) => {
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
-    // Prisma lấy luôn các bảng liên quan trong 1 nốt nhạc
     const jobs = await prisma.jobs.findMany({
       where,
       orderBy: { id: "desc" },
       skip,
       take: parseInt(limit),
-      ...jobRelations, // Sử dụng object include đã định nghĩa ở trên
+      ...jobRelations,
     });
 
     const total = await prisma.jobs.count({ where });

@@ -317,15 +317,15 @@ export const getAllJobs = async (req, res) => {
         is_featured: true,
         is_urgent: true,
         created_at: true,
-        // Ánh xạ để lấy tên thay vì chỉ lấy ID
+
         job_categories: {
           select: {
-            name: true, // Giả sử bảng category có trường 'name'
+            name: true,
           },
         },
         job_locations: {
           select: {
-            name: true, // Giả sử bảng location có trường 'name'
+            name: true,
           },
         },
         job_types: {
@@ -383,8 +383,6 @@ export const updateJob = async (req, res) => {
       });
     }
 
-    // 2. Ép kiểu dữ liệu (Data Sanitization)
-    // Đảm bảo các ID là số nguyên, nếu không có thì giữ nguyên giá trị cũ (undefined)
     const dataToUpdate = {
       title: updateData.title,
       description: updateData.description,
@@ -395,7 +393,6 @@ export const updateJob = async (req, res) => {
       deadline: updateData.deadline,
       vacancy: updateData.vacancy ? parseInt(updateData.vacancy) : undefined,
 
-      // Quan trọng: Ép kiểu Int cho các Foreign Key
       job_category_id: updateData.jobCategory
         ? parseInt(updateData.jobCategory)
         : undefined,
@@ -419,7 +416,6 @@ export const updateJob = async (req, res) => {
       is_urgent: updateData.isUrgent,
     };
 
-    // 3. Tiến hành cập nhật
     const updatedJob = await prisma.jobs.update({
       where: { id: parseInt(id) },
       data: dataToUpdate,
@@ -430,7 +426,6 @@ export const updateJob = async (req, res) => {
       data: updatedJob,
     });
   } catch (error) {
-    // Log lỗi chi tiết ở server để debug
     console.error("Update Job Error:", error);
     return res.status(500).json({ message: "Lỗi hệ thống khi cập nhật" });
   }
@@ -441,7 +436,6 @@ export const deleteJob = async (req, res) => {
     const { id } = req.params;
     const userId = req.user.id;
 
-    // Kiểm tra quyền sở hữu trước khi xóa
     const existingJob = await prisma.jobs.findFirst({
       where: {
         id: parseInt(id),
@@ -721,7 +715,7 @@ export const createOrder = async (req, res) => {
     // Generate order number
     const orderNo = `ORD-${Date.now()}-${companyId}`;
 
-    // Create order
+    // Create order in DB
     const order = await prisma.orders.create({
       data: {
         company_id: BigInt(companyId),

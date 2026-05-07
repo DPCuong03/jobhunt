@@ -6,7 +6,7 @@ import {
   getJobExperiences,
   getJobGenders,
   getJobSalaryRanges,
-} from "../controllers/jobAttributes.controller.js";
+} from "../controllers/front/job.controller.js";
 
 const router = express.Router();
 

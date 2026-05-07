@@ -1,4 +1,5 @@
-//AdminJobCategoryController, AdminJobLocationController, AdminJobTypeController, AdminJobExperienceController, AdminJobGenderController, AdminJobSalaryRangeController
+import prisma from "../../lib/db.js";
+
 export const getAllCategories = async (req, res) => {
   try {
     const categories = await prisma.job_categories.findMany({
@@ -38,7 +39,6 @@ export const createCategory = async (req, res) => {
   try {
     const { name } = req.body;
 
-    // Validation
     if (!name || !name.trim()) {
       return res.status(400).json({ error: "Category name is required" });
     }
@@ -110,7 +110,6 @@ export const updateCategory = async (req, res) => {
       return res.status(409).json({ error: "Category name already exists" });
     }
 
-    // Update category
     const updatedCategory = await prisma.job_categories.update({
       where: {
         id,
@@ -157,7 +156,6 @@ export const deleteCategory = async (req, res) => {
       });
     }
 
-    // Delete category
     await prisma.job_categories.delete({
       where: {
         id,

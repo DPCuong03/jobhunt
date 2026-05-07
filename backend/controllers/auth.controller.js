@@ -3,7 +3,6 @@ import prisma from "../lib/db.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
-// Sửa hàm này để nhận thêm userType (admin/candidate/company)
 const generateTokens = (userId, userRole) => {
   const accessToken = jwt.sign(
     { id: userId, role: userRole },
@@ -57,7 +56,7 @@ export const signup = async (req, res) => {
 
   try {
     let user;
-    // Kiểm tra role để quyết định lưu vào bảng nào
+
     if (userRole === "company") {
       const userExists = await prisma.companies.findFirst({
         where: { email },
@@ -87,7 +86,6 @@ export const signup = async (req, res) => {
       });
     }
 
-    // TRUYỀN THÊM "candidate" vào hàm tạo token
     const { accessToken, refreshToken } = generateTokens(
       user.id.toString(),
       userRole,
@@ -97,7 +95,7 @@ export const signup = async (req, res) => {
 
     res.status(201).json({
       id: user.id,
-      // userRole === "company" ? user.company_name : user.name
+
       name: user.company_name || user.name,
       email: user.email,
       role: userRole,
@@ -113,7 +111,6 @@ export const login = async (req, res) => {
     let user = null;
     let userRole = "";
 
-    // Tìm kiếm phân tầng qua 3 bảng
     user = await prisma.candidates.findFirst({ where: { email } });
     if (user) {
       userRole = "candidate";
@@ -128,7 +125,6 @@ export const login = async (req, res) => {
     }
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      // QUAN TRỌNG: Lưu userRole vào token để middleware check
       const { accessToken, refreshToken } = generateTokens(
         user.id.toString(),
         userRole,
@@ -237,5 +233,5 @@ export const logout = async (req, res) => {
 };
 
 export const getProfile = async (req, res) => {
-  res.json(req.user); // req.user đã được gán bởi Middleware (protectRoute/candidateRoute...)
+  res.json(req.user);
 };
