@@ -38,7 +38,7 @@ export default function Login() {
           : "/company/dashboard";
       router.replace(targetPath);
     } else {
-      console.log("4. Login thất bại hoặc result không có ID");
+      console.log("Login failed or user role is unrecognized.");
     }
   };
 
@@ -114,11 +114,7 @@ export default function Login() {
                       Password
                     </label>
                     <Link
-                      href={
-                        formData.userRole === "company"
-                          ? "/forget-password-company"
-                          : "/forget-password-candidate"
-                      }
+                      href={"/forgot-password"}
                       className="text-xs text-blue-600 hover:underline"
                     >
                       Forgot Password?
