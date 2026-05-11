@@ -173,7 +173,7 @@ export const useUserStore = create((set, get) => ({
     try {
       console.log("🔄 Calling refresh-token endpoint...");
       const response = await axios.post(
-        "http://localhost:5000/api/auth/refresh-token",
+        "${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh-token",
         {},
         { withCredentials: true },
       );

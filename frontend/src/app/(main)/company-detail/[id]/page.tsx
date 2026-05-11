@@ -27,7 +27,7 @@ export default function CompanyDetail({
     const fetchCompany = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/company-detail/${id}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/company-detail/${id}`,
         );
         const result = await res.json();
         setData(result);

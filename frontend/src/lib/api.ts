@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 
 const api: AxiosInstance = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "${process.env.NEXT_PUBLIC_API_URL}/api",
   withCredentials: true,
 });
 
@@ -101,7 +101,7 @@ api.interceptors.response.use(
       try {
         console.log("🔄 Attempting to refresh token...");
         await axios.post(
-          "http://localhost:5000/api/auth/refresh-token",
+          "${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh-token",
           {},
           { withCredentials: true },
         );
