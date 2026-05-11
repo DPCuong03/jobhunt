@@ -114,7 +114,11 @@ export default function Login() {
                       Password
                     </label>
                     <Link
-                      href="/forgot-password"
+                      href={
+                        formData.userRole === "company"
+                          ? "/forget-password-company"
+                          : "/forget-password-candidate"
+                      }
                       className="text-xs text-blue-600 hover:underline"
                     >
                       Forgot Password?
