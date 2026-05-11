@@ -9,7 +9,7 @@ export default function ForgotPassword() {
         <div className="container">
           <div className="row">
             <div className="col-md-12">
-              <h2>Forgot Password - Candidate</h2>
+              <h2>Forgot Password</h2>
             </div>
           </div>
         </div>

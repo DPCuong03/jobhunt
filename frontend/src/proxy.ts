@@ -22,9 +22,9 @@ export function proxy(request: NextRequest) {
     isPaymentCallback;
 
   const isProtectedRoute =
-    (pathname.startsWith("/candidate") ||
-      pathname.startsWith("/company") ||
-      pathname.startsWith("/admin")) &&
+    (pathname.startsWith("/candidate/") ||
+      pathname.startsWith("/company/") ||
+      pathname.startsWith("/admin/")) &&
     !isPublicRoute;
 
   const isAuthRoute = pathname === "/login" || pathname === "/signup";
