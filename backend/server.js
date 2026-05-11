@@ -26,7 +26,9 @@ app.post(
 app.use(
   cors({
     // 1. Phải chỉ định chính xác Origin của Frontend, không dùng '*'
-    origin: "http://localhost:3000",
+    origin: process.env.ALLOWED_ORIGINS?.split(",") || [
+      "http://localhost:3000",
+    ],
 
     // 2. Bắt buộc để trình duyệt cho phép gửi/nhận Cookie
     credentials: true,
