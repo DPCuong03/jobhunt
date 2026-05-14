@@ -6,7 +6,7 @@ const BlogSection = () => {
       id: 1,
       title: "Blog Post 1",
       short_description: "Short desc",
-      photo: "/uploads/blog1.jpg",
+      photo: "/uploads/banner.jpg",
       slug: "post-1",
     },
     // Add more
