@@ -52,6 +52,7 @@ export const useUserStore = create((set, get) => ({
       const res = await api.post("/auth/login", { email, password });
 
       set({ user: res.data, loading: false });
+      localStorage.setItem("user", JSON.stringify(res.data));
       return res.data;
     } catch (error) {
       set({ loading: false });
@@ -63,6 +64,7 @@ export const useUserStore = create((set, get) => ({
     try {
       await api.post("/auth/logout");
       set({ user: null, checkingAuth: false });
+      localStorage.removeItem("user");
     } catch (error) {
       toast.error(
         error.response?.data?.message || "An error occurred during logout",
@@ -83,9 +85,15 @@ export const useUserStore = create((set, get) => ({
       const response = await api.get("/auth/profile");
       console.log("checkAuth successful");
       set({ user: response.data, checkingAuth: false });
-      isCheckingAuth = false;
+      localStorage.setItem("user", JSON.stringify(response.data));
     } catch (error) {
-      set({ user: null, checkingAuth: false });
+      const cached = localStorage.getItem("user");
+      if (cached) {
+        set({ user: JSON.parse(cached), checkingAuth: false });
+      } else {
+        set({ user: null, checkingAuth: false });
+        localStorage.removeItem("user");
+      }
     } finally {
       isCheckingAuth = false;
     }
