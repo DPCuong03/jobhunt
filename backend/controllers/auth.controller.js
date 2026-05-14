@@ -31,19 +31,20 @@ const storeRefreshToken = async (userId, refreshToken) => {
 const setCookies = (res, accessToken, refreshToken) => {
   const isProduction = process.env.NODE_ENV === "production";
 
-  res.cookie("accessToken", accessToken, {
+  const cookieOptions = {
     httpOnly: true,
-    secure: isProduction, // false in development, true in production
-    sameSite: isProduction ? "strict" : "lax", // "lax" in development for localhost testing
-    maxAge: 15 * 60 * 1000, //15 minutes
-    path: "/", // Ensure cookie is available to all paths
+    secure: true,
+    sameSite: "none", // Required for cross-domain cookies
+    path: "/",
+  };
+
+  res.cookie("accessToken", accessToken, {
+    ...cookieOptions,
+    maxAge: 15 * 60 * 1000,
   });
   res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "strict" : "lax",
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    path: "/",
+    ...cookieOptions,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 };
 

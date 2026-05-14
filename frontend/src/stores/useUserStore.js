@@ -85,27 +85,8 @@ export const useUserStore = create((set, get) => ({
       set({ user: response.data, checkingAuth: false });
       isCheckingAuth = false;
     } catch (error) {
-      console.log("checkAuth error:", error.message, error.response?.status);
-
-      // If 401 (unauthorized), try to refresh token once
-      if (error.response?.status === 401 && !isRefreshing) {
-        isRefreshing = true;
-        try {
-          console.log("🔄 Attempting to refresh token...");
-          await get().refreshToken();
-          // Retry checkAuth after refresh
-          isRefreshing = false;
-          return get().checkAuth();
-        } catch (refreshError) {
-          isRefreshing = false;
-          console.log("Unauthorized - clearing user");
-          set({ checkingAuth: false, user: null });
-        }
-      } else {
-        // For other errors, just update checkingAuth without clearing user
-        set({ checkingAuth: false });
-      }
-
+      set({ user: null, checkingAuth: false });
+    } finally {
       isCheckingAuth = false;
     }
   },
