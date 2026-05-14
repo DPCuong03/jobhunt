@@ -69,8 +69,8 @@ export function proxy(request: NextRequest) {
     } catch (error) {
       // Nếu token không hợp lệ hoặc hết hạn, xóa token
       const response = new NextResponse();
-      //response.cookies.delete("accessToken");
-      //response.cookies.delete("refreshToken");
+      response.cookies.delete("accessToken");
+      response.cookies.delete("refreshToken");
 
       // Nếu đang ở route bảo vệ, đẩy về login
       if (isProtectedRoute) {
