@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { decodeJwt } from "jose";
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   // 1. Lấy token từ Cookie (Ưu tiên accessToken bạn đã thấy trong DevTools)
   const token =
     request.cookies.get("accessToken")?.value ||

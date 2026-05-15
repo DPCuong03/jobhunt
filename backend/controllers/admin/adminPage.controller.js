@@ -1,7 +1,6 @@
-//AdminHomePageController, AdminFaqPageController, AdminBlogPageController, AdminTermPageController, AdminPrivacyPageController, AdminContactPageController, AdminPricingPageController, AdminOtherPageController
 import prisma from "../../lib/db.js";
 
-// Helper: serialize bigint id to string for JSON safety
+
 const serializeFaq = (faq) => ({
   id: faq.id.toString(),
   question: faq.question,
@@ -10,7 +9,6 @@ const serializeFaq = (faq) => ({
   updatedAt: faq.updated_at?.toISOString() ?? null,
 });
 
-// Returns all FAQs ordered by created_at asc
 export const getAllFaqs = async (req, res) => {
   try {
     const faqs = await prisma.faqs.findMany({

@@ -1,6 +1,6 @@
 import prisma from "../../lib/db.js";
 
-// Admin Dashboard - Get platform statistics
+// Admin Dashboard
 export const getDashboardStats = async (req, res) => {
   try {
     const [total_companies, total_candidates, total_jobs] = await Promise.all([
