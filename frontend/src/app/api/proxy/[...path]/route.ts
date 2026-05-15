@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const BACKEND_URL = process.env.BACKEND_URL; // internal, not public
+const BACKEND_URL = process.env.BACKEND_URL;
 
 export async function GET(
   req: NextRequest,
@@ -38,7 +38,6 @@ async function proxyRequest(
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    // Forward cookies to backend
     cookie: req.headers.get("cookie") || "",
   };
 
@@ -46,18 +45,21 @@ async function proxyRequest(
     method !== "GET" && method !== "DELETE" ? await req.text() : undefined;
 
   const backendRes = await fetch(url, { method, headers, body });
-
   const resBody = await backendRes.text();
+
   const response = new NextResponse(resBody, {
     status: backendRes.status,
     headers: { "Content-Type": "application/json" },
   });
 
-  // Forward Set-Cookie from backend to browser (now on vercel.app domain)
-  const setCookie = backendRes.headers.get("set-cookie");
-  if (setCookie) {
-    response.headers.set("set-cookie", setCookie);
-  }
+  // ← FIX: getSetCookie() returns ALL Set-Cookie headers, not just the first
+  const cookies =
+    backendRes.headers.getSetCookie?.() ??
+    [backendRes.headers.get("set-cookie")].filter(Boolean);
+
+  cookies.forEach((cookie) => {
+    response.headers.append("set-cookie", cookie);
+  });
 
   return response;
 }
