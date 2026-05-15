@@ -29,8 +29,6 @@ const storeRefreshToken = async (userId, refreshToken) => {
 };
 
 const setCookies = (res, accessToken, refreshToken) => {
-  const isProduction = process.env.NODE_ENV === "production";
-
   const cookieOptions = {
     httpOnly: true,
     secure: true,
@@ -198,7 +196,6 @@ export const refreshToken = async (req, res) => {
       { expiresIn: "15m" },
     );
 
-    const isProduction = process.env.NODE_ENV === "production";
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: true,
@@ -225,8 +222,15 @@ export const logout = async (req, res) => {
       );
       await redis.del(`refresh_token:${decoded.id}`);
     }
-    res.clearCookie("accessToken");
-    res.clearCookie("refreshToken");
+    const clearOptions = {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      path: "/",
+    };
+    res.clearCookie("accessToken", clearOptions);
+    res.clearCookie("refreshToken", clearOptions);
+
     res.json({ message: "Logged out successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
