@@ -3,14 +3,14 @@ import type { NextRequest } from "next/server";
 import { decodeJwt } from "jose";
 
 export function proxy(request: NextRequest) {
-  // 1. Lấy token từ Cookie (Ưu tiên accessToken bạn đã thấy trong DevTools)
+  // API-domain cookies are not always visible to the frontend domain in
+  // production, so only use this token when the browser sends it here.
   const token =
     request.cookies.get("accessToken")?.value ||
     request.cookies.get("authjs.session-token")?.value;
 
   const { pathname } = request.nextUrl;
 
-  // Định nghĩa các nhóm route
   const isPaymentCallback =
     pathname.startsWith("/company/payment/success") ||
     pathname.startsWith("/company/payment/fail");
@@ -18,7 +18,7 @@ export function proxy(request: NextRequest) {
   const isPublicRoute =
     pathname === "/login" ||
     pathname === "/signup" ||
-    pathname === "/admin/login" || // Thêm dòng này
+    pathname === "/admin/login" ||
     isPaymentCallback;
 
   const isProtectedRoute =
@@ -29,14 +29,11 @@ export function proxy(request: NextRequest) {
 
   const isAuthRoute = pathname === "/login" || pathname === "/signup";
 
-  // 2. Xử lý khi đã có Token
   if (token) {
     try {
-      // Giải mã JWT để lấy role (không cần secret key để decode lấy payload)
       const payload = decodeJwt(token);
-      const role = payload.role as string; // Đảm bảo backend trả về field 'role'
+      const role = payload.role as string;
 
-      // A. Nếu đang ở trang Login/Signup mà đã có token -> Đẩy về Dashboard đúng role
       if (isAuthRoute) {
         let target = "/candidate/dashboard";
         if (role === "admin") target = "/admin/dashboard";
@@ -45,7 +42,6 @@ export function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL(target, request.url));
       }
 
-      // B. Chặn chéo vai trò (Bảo mật tầng Middleware)
       if (pathname.startsWith("/admin") && role !== "admin") {
         return NextResponse.redirect(
           new URL("/candidate/dashboard", request.url),
@@ -57,38 +53,28 @@ export function proxy(request: NextRequest) {
         );
       }
       if (pathname.startsWith("/candidate") && role !== "candidate") {
-        if (role === "company")
+        if (role === "company") {
           return NextResponse.redirect(
             new URL("/company/dashboard", request.url),
           );
-        if (role === "admin")
+        }
+        if (role === "admin") {
           return NextResponse.redirect(
             new URL("/admin/dashboard", request.url),
           );
+        }
       }
-    } catch (error) {
-      // Nếu token không hợp lệ hoặc hết hạn, xóa token
-      const response = new NextResponse();
+    } catch {
+      const response = NextResponse.next();
       response.cookies.delete("accessToken");
       response.cookies.delete("refreshToken");
-
-      // Nếu đang ở route bảo vệ, đẩy về login
-      if (isProtectedRoute) {
-        return NextResponse.redirect(new URL("/login", request.url), response);
-      }
-
-      // Nếu token không hợp lệ trên login/signup, vẫn xóa nó để tránh lỗi
-      // Tiếp tục request bình thường
       return response;
     }
   }
 
-  // 3. Nếu chưa có Token mà vào trang bảo vệ -> Đẩy về Login
-  if (isProtectedRoute && !token) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-
-  // 4. Thiết lập Header chống Cache (Sửa lỗi nhấn "Back" sau khi logout)
+  // Do not redirect protected pages just because this frontend request has no
+  // cookie. In split frontend/backend deployments, axios still sends the cookie
+  // to the API host with withCredentials, and the backend enforces access.
   const response = NextResponse.next();
   if (isProtectedRoute) {
     response.headers.set(
@@ -100,7 +86,6 @@ export function proxy(request: NextRequest) {
   return response;
 }
 
-// Cấu hình Matcher để Middleware không chạy lãng phí vào các file tĩnh
 export const config = {
   matcher: [
     "/candidate/:path*",
